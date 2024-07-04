@@ -25,6 +25,7 @@ const lines = [];
 
 const normalizedPoint = (point) => [point[0] * width, point[1] * height];
 const normalizedLine = (line) => line.map(normalizedPoint);
+const pythagorean = (a, b) => Math.sqrt(a ** 2 + b ** 2);
 
 for (let i = 1; i < 10; i += 1) {
 	let instructions = "YYY".split("");
@@ -80,18 +81,28 @@ function makeStar() {
 const starcount = 3;
 const star5count = 3;
 
+const starLocations = [];
+const genStarLocation = () => {
+	let x, y;
+	do {
+		x = bt.randInRange(0.1, 0.9) * width;
+		y = bt.randInRange(0.6, 0.9) * height;
+	} while (
+		starLocations.find((loc) => pythagorean(loc[0] - x, loc[1] - y) < 20)
+	);
+	starLocations.push([x, y]);
+	return [x, y];
+};
+
 for (let i = 0; i < starcount; i++) {
 	const newStar = makeStar();
-	bt.scale(newStar, bt.randInRange(0.1, 0.4));
-	bt.translate(newStar, [
-		bt.randInRange(-0.4, 0.4) * width,
-		bt.randInRange(0.1, 0.4) * height,
-	]);
+	bt.scale(newStar, bt.randInRange(0.1, 0.3));
+	bt.translate(newStar, genStarLocation(), [0.5 * width, 0.5 * height]);
 	lines.push(...newStar);
 }
 
 const TAU = 2 * Math.PI;
-function make5PointStar(x, y, r) {
+function make5PointStar(r) {
 	const star = Array(6)
 		.fill()
 		.map((_, i) => {
@@ -104,17 +115,11 @@ function make5PointStar(x, y, r) {
 			];
 		});
 
-	bt.translate([star], [x, y]);
+	bt.translate([star], genStarLocation());
 	return star.map((_, i, arr) => arr[(i * 2) % 5]);
 }
 
 for (let i = 0; i < star5count; i++)
-	lines.push(
-		make5PointStar(
-			bt.randInRange(0.1, 0.9) * width,
-			bt.randInRange(0.6, 0.9) * height,
-			bt.randInRange(3, 6)
-		)
-	);
+	lines.push(make5PointStar(bt.randInRange(3, 6)));
 
 drawLines(lines);
