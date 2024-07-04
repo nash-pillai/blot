@@ -9,9 +9,7 @@ const rules = {
 	X: "X[-FFF][+FFF]FX".split(""),
 };
 
-const angle = 60;
-const iterations = 4;
-const length = 2;
+const angle = 35;
 const savedPositions = [];
 const savedAngles = [];
 
@@ -28,9 +26,11 @@ for (let depth = 0; depth < 5; depth++) {
 
 const turtle = new bt.Turtle().jump(normalizedPoint([0.5, 0.1])).setAngle(90);
 for (const instruction of instructions) {
-	if (instruction === "F") turtle.forward(length);
-	else if (instruction === "+") turtle.left(angle);
-	else if (instruction === "-") turtle.right(angle);
+	if (instruction === "F") turtle.forward(bt.randInRange(0.5, 1));
+	else if (instruction === "+")
+		turtle.left(bt.randInRange(angle - 20, angle + 10));
+	else if (instruction === "-")
+		turtle.right(bt.randInRange(angle - 20, angle + 10));
 	else if (instruction === "[") {
 		savedPositions.push(turtle.pos);
 		savedAngles.push(turtle.angle);
