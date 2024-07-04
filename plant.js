@@ -3,10 +3,18 @@ const height = 200;
 
 setDocDimensions(width, height);
 
-let instructions = "YYY".split("");
 const rules = {
-	Y: "YFX[+Y][-Y]".split(""),
-	X: "X[-FFF][+FFF]FX".split(""),
+	Y: [
+		"YFX[+Y][-Y]".split(""),
+		"YFX[+Y][-Y]".split(""),
+		"YFX[-Y]".split(""),
+		"YFX[+Y]".split(""),
+	],
+	X: [
+		"X[-FFF][+FFF]FX".split(""),
+		"X[+FFF]FX".split(""),
+		"X[-FFF]FX".split(""),
+	],
 };
 
 const angle = 35;
@@ -18,10 +26,15 @@ const lines = [];
 const normalizedPoint = (point) => [point[0] * width, point[1] * height];
 const normalizedLine = (line) => line.map(normalizedPoint);
 
-for (let depth = 0; depth < 5; depth++) {
-	instructions = instructions.flatMap(
-		(instruction) => rules[instruction] ?? instruction
-	);
+let instructions = "YY".split("");
+for (let depth = 0; depth < 6; depth++) {
+	instructions = instructions.flatMap((instruction) => {
+		return (
+			rules[instruction]?.[
+				Math.trunc(Math.random() * rules[instruction]?.length)
+			] ?? instruction
+		);
+	});
 }
 
 const turtle = new bt.Turtle().jump(normalizedPoint([0.5, 0.1])).setAngle(90);
