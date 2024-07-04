@@ -76,7 +76,9 @@ function makeStar() {
 
 	return star;
 }
+
 const starcount = 3;
+const star5count = 3;
 
 for (let i = 0; i < starcount; i++) {
 	const newStar = makeStar();
@@ -87,5 +89,32 @@ for (let i = 0; i < starcount; i++) {
 	]);
 	lines.push(...newStar);
 }
+
+const TAU = 2 * Math.PI;
+function make5PointStar(x, y, r) {
+	const star = Array(6)
+		.fill()
+		.map((_, i) => {
+			const a = (TAU * i) / 5 + TAU / 4;
+			const randA = bt.randInRange(0, TAU);
+			const randR = bt.randInRange(0, 1);
+			return [
+				r * Math.cos(a) + randR * Math.cos(randA),
+				r * Math.sin(a) + randR * Math.sin(randA),
+			];
+		});
+
+	bt.translate([star], [x, y]);
+	return star.map((_, i, arr) => arr[(i * 2) % 5]);
+}
+
+for (let i = 0; i < star5count; i++)
+	lines.push(
+		make5PointStar(
+			bt.randInRange(0.1, 0.9) * width,
+			bt.randInRange(0.6, 0.9) * height,
+			bt.randInRange(3, 6)
+		)
+	);
 
 drawLines(lines);
