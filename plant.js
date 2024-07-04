@@ -26,33 +26,36 @@ const lines = [];
 const normalizedPoint = (point) => [point[0] * width, point[1] * height];
 const normalizedLine = (line) => line.map(normalizedPoint);
 
-let instructions = "YY".split("");
-for (let depth = 0; depth < 6; depth++) {
-	instructions = instructions.flatMap((instruction) => {
-		return (
-			rules[instruction]?.[
-				Math.trunc(Math.random() * rules[instruction]?.length)
-			] ?? instruction
-		);
-	});
-}
-
-const turtle = new bt.Turtle().jump(normalizedPoint([0.5, 0.1])).setAngle(90);
-for (const instruction of instructions) {
-	if (instruction === "F") turtle.forward(bt.randInRange(0.5, 1));
-	else if (instruction === "+")
-		turtle.left(bt.randInRange(angle - 20, angle + 10));
-	else if (instruction === "-")
-		turtle.right(bt.randInRange(angle - 20, angle + 10));
-	else if (instruction === "[") {
-		savedPositions.push(turtle.pos);
-		savedAngles.push(turtle.angle);
-	} else if (instruction === "]") {
-		turtle.jump(savedPositions.pop());
-		turtle.angle = savedAngles.pop();
+for (let i = 1; i < 10; i += 1) {
+	let instructions = "YYY".split("");
+	for (let depth = 0; depth < 5; depth++) {
+		instructions = instructions.flatMap((instruction) => {
+			return (
+				rules[instruction]?.[
+					Math.trunc(Math.random() * rules[instruction]?.length)
+				] ?? instruction
+			);
+		});
 	}
+
+	const turtle = new bt.Turtle()
+		.jump(normalizedPoint([i / 10, bt.randInRange(0, 0.2)]))
+		.setAngle(90);
+	for (const instruction of instructions) {
+		if (instruction === "F") turtle.forward(bt.randInRange(0.5, 1));
+		else if (instruction === "+")
+			turtle.left(bt.randInRange(angle - 20, angle + 10));
+		else if (instruction === "-")
+			turtle.right(bt.randInRange(angle - 20, angle + 10));
+		else if (instruction === "[") {
+			savedPositions.push(turtle.pos);
+			savedAngles.push(turtle.angle);
+		} else if (instruction === "]") {
+			turtle.jump(savedPositions.pop());
+			turtle.angle = savedAngles.pop();
+		}
+	}
+
+	lines.push(...turtle.path);
 }
-
-lines.push(...turtle.path);
-
 drawLines(lines);
