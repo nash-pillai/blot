@@ -58,4 +58,34 @@ for (let i = 1; i < 10; i += 1) {
 
 	lines.push(...turtle.path);
 }
+
+function makeStar() {
+	const star = [];
+	const starlines = 24;
+
+	for (let i = 0; i < starlines; i++) {
+		star.push(
+			normalizedLine([
+				[0.5, 0.5],
+				[0.5, bt.randInRange(0.7, 0.8)],
+			])
+		);
+
+		bt.rotate(star, 360 / starlines, [0.5 * width, 0.5 * height]);
+	}
+
+	return star;
+}
+const starcount = 3;
+
+for (let i = 0; i < starcount; i++) {
+	const newStar = makeStar();
+	bt.scale(newStar, bt.randInRange(0.1, 0.4));
+	bt.translate(newStar, [
+		bt.randInRange(-0.4, 0.4) * width,
+		bt.randInRange(0.1, 0.4) * height,
+	]);
+	lines.push(...newStar);
+}
+
 drawLines(lines);
